@@ -141,8 +141,8 @@ class _SetPageState extends State<SetPage> {
                           Slider(
                             value: fontSize.toDouble(),
                             min: 14,
-                            max: 24,
-                            divisions: 10,
+                            max: 34,
+                            divisions: 15,
                             label: fontSize.toString(),
                             onChanged: (double value) async {
                               setFontSizeState(() {

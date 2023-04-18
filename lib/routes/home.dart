@@ -88,7 +88,8 @@ class HomePageState extends State<HomePage> {
 
   Future<void> refresh() async {
     List<Feed> feedList = await feeds();
-    int failCount = 0;
+    // int failCount = 0;
+    List<Feed> failedFeedList = [];
     await Future.wait(
       feedList.map(
         (e) => parseFeedContent(e).then(
@@ -101,20 +102,28 @@ class HomePageState extends State<HomePage> {
               }
               await getUnreadCount();
             } else {
-              failCount++;
+              // failCount++;
+              failedFeedList.add(e);
             }
           },
         ),
       ),
     );
+    int failCount = failedFeedList.length;
     if (failCount > 0) {
       if (!mounted) return;
+
+      String failedFeedListStr = '';
+      failedFeedList.map(
+        (e) => failedFeedListStr += e.name + "\n"
+      );
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('更新失败 $failCount 个订阅源'),
+          content: Text('更新失败 $failCount 个订阅源\n$failedFeedListStr'),
           behavior: SnackBarBehavior.floating,
           showCloseIcon: true,
-          duration: const Duration(seconds: 2),
+          duration: const Duration(seconds: 5),
         ),
       );
     } else {
