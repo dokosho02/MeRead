@@ -16,7 +16,6 @@ class ReadPage extends StatefulWidget {
   final Post post;
   final Map<String, dynamic> initData;
   final bool fullText;
-
   @override
   ReadPageState createState() => ReadPageState();
 }
@@ -25,6 +24,7 @@ class ReadPageState extends State<ReadPage> {
   double appBarHeight = 56.0; // AppBar 高度
   int lastScrollY = 0; // 上次滚动位置
   int _index = 1; // 堆叠索引
+  // final double _fullHeightFraction = 0.8; // Define this as per your requirement, e.g. 0.8 for full screen
 
   @override
   void initState() {
@@ -35,6 +35,15 @@ class ReadPageState extends State<ReadPage> {
       });
     }
   }
+
+  // void _scrollToBottom() {
+  //   final double maxScrollExtent = _scrollController.position.maxScrollExtent;
+  //   final double screenHeight = MediaQuery.of(context).size.height;
+  //   final double fullScreenHeight = screenHeight * _fullHeightFraction;
+  //   // Scroll the full height of the page
+  //   _scrollController.animateTo(maxScrollExtent - fullScreenHeight,
+  //       duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -205,6 +214,10 @@ ${widget.post.content}
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
+          // GestureDetector(
+          // onTap: _scrollToBottom,
+
+          // child: 
           InAppWebView(
             initialData: !(widget.post.openType == 1 ||
                     (widget.fullText &&
@@ -277,6 +290,7 @@ ${widget.post.content}
               lastScrollY = y;
             },
           )
+          // ),
         ],
       ),
     );

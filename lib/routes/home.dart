@@ -109,18 +109,19 @@ class HomePageState extends State<HomePage> {
         ),
       ),
     );
+
     int failCount = failedFeedList.length;
     if (failCount > 0) {
       if (!mounted) return;
 
-      String failedFeedListStr = '';
+      String failedFeedListStr = "";
       failedFeedList.map(
-        (e) => failedFeedListStr += e.name + "\n"
+        (e) => failedFeedListStr += e.url + "\n"
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('更新失败 $failCount 个订阅源\n$failedFeedListStr'),
+          content: Text('更新失败 $failCount 个订阅源$failedFeedListStr'),
           behavior: SnackBarBehavior.floating,
           showCloseIcon: true,
           duration: const Duration(seconds: 5),

@@ -26,7 +26,7 @@ Future<Feed?> parseFeed(String url,
       return Feed(
         name: feedName!,
         url: url,
-        description: rssFeed.description!,
+        description: rssFeed.description?? "",
         category: categoryName,
         fullText: 0,
         openType: defaultOpenType,
@@ -36,7 +36,7 @@ Future<Feed?> parseFeed(String url,
       return Feed(
         name: atomFeed.title!,
         url: url,
-        description: atomFeed.subtitle!,
+        description: atomFeed.subtitle ?? "",
         category: categoryName,
         fullText: 0,
         openType: defaultOpenType,
@@ -87,15 +87,9 @@ Future<bool> parseFeedContent(Feed feed) async {
 Future<void> parseRSSPostFuturesItem(RssItem item, Feed feed) async {
   String title = item.title!.trim();
   
-  String? contentOrDesc;
-  try {
-    var descLen = item.description?.length;
-    var contentLen = item.content?.value.length;
-    contentOrDesc = descLen! > contentLen! ? item.description! : item.content?.value;
-  }
-  catch (e) {
-    contentOrDesc = item.description;
-  }
+  var descLen = item.description?.length ?? 0;
+  var contentLen = item.content?.value.length ?? 0;
+  var contentOrDesc = descLen > contentLen ? item.description : item.content?.value;
   
   Post post = Post(
     title: title,
@@ -112,12 +106,15 @@ Future<void> parseRSSPostFuturesItem(RssItem item, Feed feed) async {
 }
 
 Future<void> parseAtomPostFuturesItem(AtomItem item, Feed feed) async {
+  var summaryLen = item.summary?.length ?? 0;
+  var contentLen = item.content?.length ?? 0;
+  var contentOrSumm = summaryLen > contentLen ? item.summary : item.content;
   Post post = Post(
     title: item.title!,
     feedId: feed.id!,
     feedName: feed.name,
     link: item.links![0].href!,
-    content: item.content!,
+    content: contentOrSumm!,
     pubDate: item.updated!.toString(),
     read: 0,
     favorite: 0,
